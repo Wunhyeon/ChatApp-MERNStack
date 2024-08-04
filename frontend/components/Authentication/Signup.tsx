@@ -1,26 +1,81 @@
+// frontend/components/Authentication/Signup.tsx
+
 "use client";
 
+import React, { FormEvent, useState } from "react";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  Button,
   FormControl,
   FormLabel,
-  Input,
-  InputGroup,
-  InputRightElement,
-  VStack,
-} from "@chakra-ui/react";
-import React, { useState } from "react";
+  Form,
+  FormField,
+  FormItem,
+  FormDescription,
+  FormMessage,
+} from "../ui/form";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import { SignupSchema } from "@/schema/SignupSchema";
+import { THIS_URL } from "@/lib/constants";
+import { toast } from "sonner";
+import { signup } from "@/action/userAction";
 
 const Signup = () => {
-  const [name, setName] = useState<string>();
-  const [email, setEmail] = useState<string>();
-  const [password, setPassword] = useState<string>();
-  const [confirmPassword, setConfirmPassword] = useState<string>();
-  const [pic, setPic] = useState<string>();
   const [show, setShow] = useState<boolean>(false);
 
-  const handleClick = () => {
+  // const signUpForm =
+
+  const signupForm = useForm<z.infer<typeof SignupSchema>>({
+    resolver: zodResolver(SignupSchema),
+    // defaultValues를 넣어줘야 경고가 뜨지 않는다. Warning: A component is changing an uncontrolled input to be controlled.
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
+
+  // 비밀번호 show hide
+  const handleClick = (e: FormEvent) => {
+    e.preventDefault(); // 이거 안해주면 버튼누르면 바로 폼 제출해버리니깐 해줘야함.
     setShow(!show);
+  };
+
+  // 폼 제출
+  // const onSubmit = (values: z.infer<typeof SignupSchema>) => {
+  const onSubmit = async (values: z.infer<typeof SignupSchema>) => {
+    const result = SignupSchema.safeParse(values);
+
+    const res = await fetch(`${THIS_URL}/auth/signup`, {
+      method: "POST",
+      body: JSON.stringify(values),
+    });
+    if (!res.ok) {
+      const result = await res.json();
+      console.log("result : ", result);
+
+      toast.error(result.message, {
+        position: "top-center",
+        richColors: true,
+        closeButton: true,
+      });
+    }
+
+    console.log("res : ", res);
+
+    // const res = await signup(values);
+    // console.log("serverAction - res : ", res);
+
+    // if (res.message) {
+    //   toast.error(res.message, {
+    //     position: "top-center",
+    //     richColors: true,
+    //     closeButton: true,
+    //   });
+    // }
   };
 
   const submitHandler = () => {};
@@ -28,69 +83,97 @@ const Signup = () => {
   const postDetails = () => {};
 
   return (
-    <VStack className="space-y-0.5">
-      <FormControl id="first-name" isRequired>
-        <FormLabel>Name</FormLabel>
-        <Input
-          placeholder="Enter Your name"
-          onChange={(e) => setName(e.target.value)}
+    <Form {...signupForm}>
+      <form className="space-y-2" onSubmit={signupForm.handleSubmit(onSubmit)}>
+        <FormField
+          control={signupForm.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name 📍</FormLabel>
+              <FormControl id="first-name">
+                <Input placeholder="Enter Your name" {...field} />
+              </FormControl>
+              {/* <FormDescription>Required</FormDescription> */}
+            </FormItem>
+          )}
         />
-      </FormControl>
 
-      <FormControl id="email" isRequired>
-        <FormLabel>Email</FormLabel>
-        <Input
-          placeholder="Enter Your Email"
-          onChange={(e) => setEmail(e.target.value)}
+        <FormField
+          control={signupForm.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email 📍</FormLabel>
+              <FormControl id="email">
+                <Input placeholder="Enter Your Email" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </FormControl>
 
-      <FormControl id="password" isRequired>
-        <FormLabel>Password</FormLabel>
-        <InputGroup>
-          <Input
-            type={show ? "text" : "password"}
-            placeholder="Enter Your Password"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <InputRightElement className="w-20">
-            <Button className="h-7 size-14" onClick={handleClick}>
-              {show ? "Hide" : "Show"}
-            </Button>
-          </InputRightElement>
-        </InputGroup>
-      </FormControl>
-
-      <FormControl id="confirmPassword" isRequired>
-        <FormLabel>Confirm Password</FormLabel>
-        <InputGroup>
-          <Input
-            type={show ? "text" : "password"}
-            placeholder="Enter Your Password"
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-          <InputRightElement className="w-20">
-            <Button className="h-7 size-14" onClick={handleClick}>
-              {show ? "Hide" : "Show"}
-            </Button>
-          </InputRightElement>
-        </InputGroup>
-      </FormControl>
-
-      <FormControl id="pic" isRequired>
-        <FormLabel>Upload your Picture</FormLabel>
-        <Input
-          type="file"
-          className="p-1"
-          accept="image/*"
-          //   onChange={(e) => postDetails(e.target.files[0])}
+        <FormField
+          control={signupForm.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password 📍</FormLabel>
+              <div className="flex gap-2">
+                <FormControl id="password">
+                  <Input
+                    placeholder="Enter Your Email"
+                    {...field}
+                    type={show ? "text" : "password"}
+                  />
+                </FormControl>
+                <Button onClick={handleClick} variant={"ghost"}>
+                  {show ? "Hide" : "Show"}
+                </Button>
+              </div>
+            </FormItem>
+          )}
         />
-      </FormControl>
 
-      <Button className="bg-blue-400 w-full mt-4" onClick={submitHandler}>
-        Sign Up
-      </Button>
-    </VStack>
+        <FormField
+          control={signupForm.control}
+          name="confirmPassword"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Confirm Password 📍</FormLabel>
+              <div className="flex gap-2">
+                <FormControl id="confirmPassword">
+                  <Input
+                    placeholder="Enter Your Email"
+                    {...field}
+                    type={show ? "text" : "password"}
+                  />
+                </FormControl>
+                <Button onClick={handleClick} variant={"ghost"}>
+                  {show ? "Hide" : "Show"}
+                </Button>
+              </div>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={signupForm.control}
+          name="pic"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Picture</FormLabel>
+              <FormControl id="pic">
+                <Input placeholder="Enter Your Email" {...field} type="file" />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+
+        <Button className="bg-blue-400 w-full mt-10">Sign Up</Button>
+      </form>
+    </Form>
   );
 };
 

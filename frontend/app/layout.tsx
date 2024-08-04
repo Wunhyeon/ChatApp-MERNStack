@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
+import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,6 +22,7 @@ export default function RootLayout({
         className={`${inter.className}, bg-[url('/background.png')] bg-cover bg-center min-h-screen`}
       >
         <Providers>{children}</Providers>
+        <Toaster />
       </body>
     </html>
   );
