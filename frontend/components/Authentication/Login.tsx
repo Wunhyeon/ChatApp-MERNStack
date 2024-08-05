@@ -42,10 +42,7 @@ const Login = () => {
 
   // 폼 제출
   const onSubmit = async (values: z.infer<typeof SigninSchema>) => {
-    console.log("Asdf");
-
     const result = await signin(values);
-    console.log("result : ", result);
     if (result.error) {
       toast.error(result.error, { richColors: true, position: "top-center" });
     } else {

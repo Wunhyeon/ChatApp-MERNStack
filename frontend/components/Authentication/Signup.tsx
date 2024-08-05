@@ -47,7 +47,6 @@ const Signup = () => {
   };
 
   // 폼 제출
-  // const onSubmit = (values: z.infer<typeof SignupSchema>) => {
   const onSubmit = async (values: z.infer<typeof SignupSchema>) => {
     const result = SignupSchema.safeParse(values);
 
@@ -57,7 +56,6 @@ const Signup = () => {
     });
     if (!res.ok) {
       const result = await res.json();
-      console.log("result : ", result);
 
       toast.error(result.message, {
         position: "top-center",
@@ -66,7 +64,6 @@ const Signup = () => {
       });
     }
 
-    console.log("res : ", res);
     router.push("/chats");
 
     // const res = await signup(values);
