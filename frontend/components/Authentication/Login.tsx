@@ -1,70 +1,101 @@
 "use client";
 
+import { SigninSchema } from "@/schema/SigninSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import React, { FormEvent, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import {
-  Button,
+  Form,
   FormControl,
+  FormField,
+  FormItem,
   FormLabel,
-  Input,
-  InputGroup,
-  InputRightElement,
-  VStack,
-} from "@chakra-ui/react";
-import React, { useState } from "react";
+  FormMessage,
+} from "../ui/form";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import { signin } from "@/action/userAction";
+import { toast } from "sonner";
 
 const Login = () => {
-  const [email, setEmail] = useState<string>();
-  const [password, setPassword] = useState<string>();
+  const router = useRouter();
   const [show, setShow] = useState<boolean>(false);
 
-  const handleClick = () => {
+  // const signUpForm =
+
+  const signinForm = useForm<z.infer<typeof SigninSchema>>({
+    resolver: zodResolver(SigninSchema),
+    // defaultValues를 넣어줘야 경고가 뜨지 않는다. Warning: A component is changing an uncontrolled input to be controlled.
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  // 비밀번호 show hide
+  const handleClick = (e: FormEvent) => {
+    e.preventDefault(); // 이거 안해주면 버튼누르면 바로 폼 제출해버리니깐 해줘야함.
     setShow(!show);
   };
 
-  const submitHandler = () => {};
+  // 폼 제출
+  const onSubmit = async (values: z.infer<typeof SigninSchema>) => {
+    console.log("Asdf");
 
-  const postDetails = () => {};
+    const result = await signin(values);
+    console.log("result : ", result);
+    if (result.error) {
+      toast.error(result.error, { richColors: true, position: "top-center" });
+    } else {
+      // 로그인 성공
+      router.push("/chats");
+    }
+  };
 
   return (
-    <VStack className="space-y-0.5">
-      <FormControl id="email" isRequired>
-        <FormLabel>Email</FormLabel>
-        <Input
-          placeholder="Enter Your Email"
-          onChange={(e) => setEmail(e.target.value)}
+    <Form {...signinForm}>
+      <form className="space-y-2" onSubmit={signinForm.handleSubmit(onSubmit)}>
+        <FormField
+          control={signinForm.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email 📍</FormLabel>
+              <FormControl id="email">
+                <Input placeholder="Enter Your Email" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </FormControl>
 
-      <FormControl id="password" isRequired>
-        <FormLabel>Password</FormLabel>
-        <InputGroup>
-          <Input
-            type={show ? "text" : "password"}
-            placeholder="Enter Your Password"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <InputRightElement className="w-20">
-            <Button className="h-7 size-14" onClick={handleClick}>
-              {show ? "Hide" : "Show"}
-            </Button>
-          </InputRightElement>
-        </InputGroup>
-      </FormControl>
+        <FormField
+          control={signinForm.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password 📍</FormLabel>
+              <div className="flex gap-2">
+                <FormControl id="password">
+                  <Input
+                    placeholder="Enter Your Email"
+                    {...field}
+                    type={show ? "text" : "password"}
+                  />
+                </FormControl>
+                <Button onClick={handleClick} variant={"ghost"}>
+                  {show ? "Hide" : "Show"}
+                </Button>
+              </div>
+            </FormItem>
+          )}
+        />
 
-      <Button className="bg-blue-400 w-full mt-4" onClick={submitHandler}>
-        Login
-      </Button>
-
-      <Button
-        colorScheme="red"
-        className="bg-red-400 w-full mt-4"
-        onClick={() => {
-          setEmail("guest@example.com");
-          setPassword("123456");
-        }}
-      >
-        Guest Login
-      </Button>
-    </VStack>
+        <Button className="bg-blue-400 w-full mt-10">Login</Button>
+      </form>
+    </Form>
   );
 };
 

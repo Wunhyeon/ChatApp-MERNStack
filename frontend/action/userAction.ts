@@ -2,6 +2,7 @@
 
 "use server";
 
+import { SigninType } from "@/schema/SigninSchema";
 import { SignupType } from "@/schema/SignupSchema";
 
 export const signup = async (form: SignupType) => {
@@ -22,5 +23,19 @@ export const signup = async (form: SignupType) => {
   // } else {
   //   return result.message;
   // }
+  return result;
+};
+
+export const signin = async (form: SigninType) => {
+  const res = await fetch(`${process.env.SERVER_URL}/api/user/login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(form),
+  });
+
+  const result = await res.json();
+
   return result;
 };

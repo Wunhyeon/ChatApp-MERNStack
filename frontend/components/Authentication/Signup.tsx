@@ -21,8 +21,10 @@ import { SignupSchema } from "@/schema/SignupSchema";
 import { THIS_URL } from "@/lib/constants";
 import { toast } from "sonner";
 import { signup } from "@/action/userAction";
+import { useRouter } from "next/navigation";
 
 const Signup = () => {
+  const router = useRouter();
   const [show, setShow] = useState<boolean>(false);
 
   // const signUpForm =
@@ -65,6 +67,7 @@ const Signup = () => {
     }
 
     console.log("res : ", res);
+    router.push("/chats");
 
     // const res = await signup(values);
     // console.log("serverAction - res : ", res);
