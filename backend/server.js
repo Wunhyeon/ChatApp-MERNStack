@@ -5,6 +5,7 @@ const { chats } = require("./data/data");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
+const chatRoutes = require("./routes/chatRoutes");
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/user", userRoutes);
+app.use("/api/chat", chatRoutes);
 
 app.use(notFound); // 위 라우터에 걸리지 않는 url은 여기 걸린다.
 app.use(errorHandler); // 위에서부터 내려오는 에러들을 처리해주도록.
