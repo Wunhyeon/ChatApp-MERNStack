@@ -1,3 +1,5 @@
+// frontend/components/Authentication/Login.tsx
+
 "use client";
 
 import { SigninSchema } from "@/schema/SigninSchema";
@@ -18,10 +20,12 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { signin } from "@/action/userAction";
 import { toast } from "sonner";
+import { useUser } from "@/lib/store/user";
 
 const Login = () => {
   const router = useRouter();
   const [show, setShow] = useState<boolean>(false);
+  const setUser = useUser((state) => state.setUser);
 
   // const signUpForm =
 
@@ -47,6 +51,8 @@ const Login = () => {
       toast.error(result.error, { richColors: true, position: "top-center" });
     } else {
       // 로그인 성공
+      console.log("result : ", result);
+      setUser(result);
       router.push("/chats");
     }
   };

@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Box,
   Container,
@@ -8,11 +10,24 @@ import {
   Tabs,
   Text,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect } from "react";
 import Login from "./Authentication/Login";
 import Signup from "./Authentication/Signup";
+import { useUser } from "@/lib/store/user";
+import { useRouter } from "next/navigation";
 
 const HomeComponent = () => {
+  const user = useUser((state) => state.user);
+  const router = useRouter();
+
+  useEffect(() => {
+    console.log("home component - user : ", user);
+
+    // if (user) {
+    //   router.push("/chats");
+    // }
+  }, []);
+
   return (
     <Container className="w-10 mx-auto  bg-red-700 border-8 border-yellow-600 rounded-lg">
       <Box
