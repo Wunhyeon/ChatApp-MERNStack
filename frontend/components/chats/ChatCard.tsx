@@ -8,7 +8,7 @@ import { Chat } from "@/schema/ChatSchema";
 import { useUser } from "@/lib/store/user";
 
 const ChatCard = ({ chat }: { chat: Chat }) => {
-  console.log("chat.users : ", chat.users);
+  // console.log("chat.users : ", chat.users);
 
   let chatName = chat.chatName;
   const loginUser = useUser((state) => state.user);

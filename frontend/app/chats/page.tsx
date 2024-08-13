@@ -3,6 +3,7 @@ import ChatBox from "@/components/chats/ChatBox";
 import ChatHeader from "@/components/chats/ChatHeader";
 import MyChat from "@/components/chats/MyChat";
 import { TOKEN } from "@/lib/constants";
+import InitChat from "@/lib/store/InitChat";
 import { Chat } from "@/schema/ChatSchema";
 import { User } from "@/schema/UserShema";
 import { cookies } from "next/headers";
@@ -51,9 +52,10 @@ const Chats = async () => {
     <div className="bg-pink-400 h-screen">
       <ChatHeader allUser={allUser} />
       <div className="flex justify-between h-full">
-        <MyChat allChat={allChat} />
+        <MyChat allUser={allUser} />
         <ChatBox />
       </div>
+      <InitChat chat={allChat} />
     </div>
   );
 };

@@ -58,7 +58,7 @@ const SearchUser = ({ allUser }: { allUser: User[] }) => {
         </ScrollArea>
         <SheetFooter className="mt-6">
           <SheetClose asChild>
-            <Button>Close</Button>
+            <Button id="searchUserClose">Close</Button>
           </SheetClose>
         </SheetFooter>
       </SheetContent>
