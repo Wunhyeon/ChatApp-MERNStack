@@ -77,3 +77,43 @@ export const makeGroupChat = async (form: GroupChat) => {
   }
   return result;
 };
+
+export const fetchMessage = async (chatId: string) => {
+  const token = getToken();
+  let result = undefined;
+  try {
+    const res = await fetch(`${process.env.SERVER_URL}/api/message/${chatId}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!res.ok) {
+      throw new Error("err in fetchMessage");
+    }
+
+    result = await res.json();
+  } catch (err) {
+    result = undefined;
+  }
+  return result;
+};
+
+export const sendMessage = async (newMessage: {
+  content: string;
+  chatId: string;
+}) => {
+  const token = getToken();
+  try {
+    const res = await fetch(`${process.env.SERVER_URL}/api/message`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(newMessage),
+    });
+    if (!res.ok) {
+    }
+  } catch (err) {}
+};

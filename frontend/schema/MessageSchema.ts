@@ -10,6 +10,7 @@ export const MessageSchema = z.object({
   sender: partialUser,
   chat: ChatSchema,
   content: z.string(),
+  _id: z.string().optional(),
 });
 
 export type Message = z.infer<typeof MessageSchema>;

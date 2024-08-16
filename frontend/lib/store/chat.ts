@@ -7,6 +7,8 @@ interface ChatState {
   chats: Chat[];
   setChats: (chats: Chat[]) => void;
   addChat: (chat: Chat) => void;
+  selectedChat: Chat | null;
+  selectOneChat: (chat: Chat) => void;
 }
 
 export const useChat = create<ChatState>()((set) => ({
@@ -16,4 +18,6 @@ export const useChat = create<ChatState>()((set) => ({
     set((state) => ({
       chats: [chat, ...state.chats.filter((el) => el._id != chat._id)],
     })),
+  selectedChat: null,
+  selectOneChat: (chat) => set((state) => ({ selectedChat: chat })),
 }));
