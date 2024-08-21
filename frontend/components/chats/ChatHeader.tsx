@@ -35,6 +35,7 @@ import { useUser } from "@/lib/store/user";
 import { useRouter } from "next/navigation";
 import SearchUser from "./SearchUser";
 import { User } from "@/schema/UserShema";
+import NotiButton from "./NotiButton";
 
 const ChatHeader = ({ allUser }: { allUser: User[] }) => {
   const setUser = useUser((state) => state.setUser);
@@ -68,7 +69,8 @@ const ChatHeader = ({ allUser }: { allUser: User[] }) => {
       {/* MyInfo */}
       <div className="flex gap-3">
         <div>
-          <Button variant={"outline"}>🔔</Button>
+          {/* <Button variant={"outline"}>🔔</Button> */}
+          <NotiButton />
         </div>
         <div>
           <Dialog>

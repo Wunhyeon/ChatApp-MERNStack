@@ -1,5 +1,6 @@
 import { getAllUser } from "@/action/userAction";
 import ChatBox from "@/components/chats/ChatBox";
+import ChatClientPage from "@/components/chats/ChatClientPage";
 import ChatHeader from "@/components/chats/ChatHeader";
 import MyChat from "@/components/chats/MyChat";
 import { TOKEN } from "@/lib/constants";
@@ -50,12 +51,7 @@ const Chats = async () => {
 
   return (
     <div className="bg-pink-400 h-screen">
-      <ChatHeader allUser={allUser} />
-      <div className="flex justify-between h-full">
-        <MyChat allUser={allUser} />
-        <ChatBox />
-      </div>
-      <InitChat chat={allChat} />
+      <ChatClientPage allUser={allUser} allChat={allChat} />
     </div>
   );
 };

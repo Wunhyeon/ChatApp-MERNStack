@@ -10,6 +10,7 @@ import { useMessage } from "@/lib/store/message";
 import Error from "next/error";
 import { fetchMessage } from "@/action/chatAction";
 import { useChat } from "@/lib/store/chat";
+import { socket } from "@/app/socket";
 
 const ChatCard = ({ chat }: { chat: Chat }) => {
   // console.log("chat.users : ", chat.users);
@@ -24,6 +25,7 @@ const ChatCard = ({ chat }: { chat: Chat }) => {
 
   const getMessages = async () => {
     selectOneChat(chat);
+    socket.emit("join chat", [chat._id, loginUser?._id]);
     const res = await fetchMessage(chat._id);
     if (typeof res != "undefined") {
       setMessages(res);

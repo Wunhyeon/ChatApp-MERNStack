@@ -8,9 +8,10 @@ import { Message } from "@/schema/MessageSchema";
 import { useUser } from "@/lib/store/user";
 import { useChat } from "@/lib/store/chat";
 import { sendMessage } from "@/action/chatAction";
+import { socket } from "@/app/socket";
+import { User } from "@/schema/UserShema";
 
-const MessageInput = () => {
-  const user = useUser((state) => state.user);
+const MessageInput = ({ user }: { user: User | null }) => {
   const addMessage = useMessage((state) => state.addMessage);
   const selectedChat = useChat((state) => state.selectedChat);
 
@@ -26,8 +27,12 @@ const MessageInput = () => {
       chat: selectedChat!,
     };
 
+    socket.emit("newMessage", newMessageForOptimistic);
+
     addMessage(newMessageForOptimistic);
     await sendMessage(newMessageForServer);
+
+    socket.emit("test", "test");
   };
 
   return (

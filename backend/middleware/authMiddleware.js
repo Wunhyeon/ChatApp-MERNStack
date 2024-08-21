@@ -24,6 +24,7 @@ const protect = asyncHandler(async (req, res, next) => {
     }
   } else {
     res.status(401);
+
     throw new Error("No Token");
   }
 });

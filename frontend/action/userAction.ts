@@ -41,6 +41,8 @@ export const signup = async (form: SignupType) => {
 
 export const signin = async (form: SigninType) => {
   const cookieStore = cookies();
+  console.log("process.env.SERVER_URL : ", process.env.SERVER_URL);
+
   const res = await fetch(`${process.env.SERVER_URL}/api/user/login`, {
     method: "POST",
     headers: {
@@ -74,6 +76,10 @@ export const getAllUser = async () => {
       Authorization: `Bearer ${token}`,
     },
   });
+
+  if (!res.ok) {
+    console.log("err in useraction - getAllUser. please Err handling");
+  }
 
   const result = await res.json();
 
